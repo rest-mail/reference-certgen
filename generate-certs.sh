@@ -32,13 +32,20 @@ if [ "$ALL_PRESENT" = 1 ]; then
   exit 0
 fi
 
-echo "Generating CA: $CA_NAME ($CA_KEY_BITS bits, $CA_DAYS days)"
-openssl genrsa -out "$CERT_DIR/ca.key" "$CA_KEY_BITS" 2>/dev/null
-openssl req -x509 -new -nodes \
-  -key "$CERT_DIR/ca.key" \
-  -sha256 -days "$CA_DAYS" \
-  -out "$CERT_DIR/ca.crt" \
-  -subj "/C=$COUNTRY/ST=$STATE/L=$LOCALITY/O=$CA_NAME/CN=$CA_NAME"
+# Reuse an existing CA. Regenerating it whenever a *cert* is missing would
+# rotate the CA and invalidate certs already issued for other domains — which
+# breaks incremental, per-domain issuance (add one domain at a time).
+if [ -f "$CERT_DIR/ca.crt" ] && [ -f "$CERT_DIR/ca.key" ]; then
+  echo "Reusing existing CA: $CERT_DIR/ca.crt"
+else
+  echo "Generating CA: $CA_NAME ($CA_KEY_BITS bits, $CA_DAYS days)"
+  openssl genrsa -out "$CERT_DIR/ca.key" "$CA_KEY_BITS" 2>/dev/null
+  openssl req -x509 -new -nodes \
+    -key "$CERT_DIR/ca.key" \
+    -sha256 -days "$CA_DAYS" \
+    -out "$CERT_DIR/ca.crt" \
+    -subj "/C=$COUNTRY/ST=$STATE/L=$LOCALITY/O=$CA_NAME/CN=$CA_NAME"
+fi
 
 for D in $DOMAINS; do
   if [ -f "$CERT_DIR/$D.crt" ] && [ -f "$CERT_DIR/$D.key" ]; then
