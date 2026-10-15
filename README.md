@@ -7,8 +7,8 @@ Designed for **development and testbed environments** where you need realistic T
 ## Image
 
 ```
-ghcr.io/rest-mail/reference-certgen:latest          # always newest
-ghcr.io/rest-mail/reference-certgen:YYYY.MM.DD      # immutable calver tag
+ghcr.io/rest-mail/reference-certgen:latest          # newest master build; pin a release instead
+ghcr.io/rest-mail/reference-certgen:X.Y.Z          # a release: git tag vX.Y.Z publishes it
 ```
 
 ## Quick start
