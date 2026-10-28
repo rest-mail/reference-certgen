@@ -101,6 +101,23 @@ services:
     # ...
 ```
 
+## Validation
+
+The image build uses the shared `rest-mail/deploy` workflow. As a one-shot job,
+it explicitly sets `require-healthcheck: false` and supplies `tests/smoke.sh` as
+its runtime check. The check runs the built image, requires successful exit,
+and verifies generated certificate chains, hostnames, SANs, matching private
+keys and an unchanged idempotent re-run. No placeholder HEALTHCHECK is needed.
+
+Run the same check locally without Docker using the host's OpenSSL:
+
+```sh
+CERTGEN_TEST_LOCAL=1 tests/smoke.sh
+```
+
+To check an existing image, use `IMAGE=<image> tests/smoke.sh`. With neither
+option set, `tests/smoke.sh` builds the image before checking it.
+
 ## License
 
 MIT.
