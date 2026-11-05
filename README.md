@@ -7,7 +7,7 @@ Designed for **development and testbed environments** where you need realistic T
 ## Image
 
 ```
-ghcr.io/rest-mail/reference-certgen:latest          # newest master build; pin a release instead
+ghcr.io/rest-mail/reference-certgen:latest          # newest main build; pin a release instead
 ghcr.io/rest-mail/reference-certgen:X.Y.Z          # a release: git tag vX.Y.Z publishes it
 ```
 
